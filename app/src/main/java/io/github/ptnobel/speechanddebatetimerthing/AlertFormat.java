@@ -37,14 +37,18 @@ public class AlertFormat {
     int lenCountDown;
     int[] warningPoints;
     int mostRecentWarning;
+    int questionLength;
     Chronometer timer;
     boolean isTiming = false;
     long timeWhenPaused = 0;
+    String nameOfTimerFormat;
+    int questionEndWarning = 0;
 
 
     int neutralColor = Color.argb(100, 0, 0, 0);
     int warningColor = Color.MAGENTA;
     int overTimeColor = Color.RED;
+    int questionColor = Color.argb(200, 200, 100, 100);
 
     public AlertFormat(EventAlertFormat event, Chronometer timer){
         this.speechLen = event.getSpeechLen();
@@ -53,10 +57,12 @@ public class AlertFormat {
         this.warningPoints = event.getWarningPoints();
         this.timer = timer;
         this.timer.setTextColor(this.neutralColor);
+        this.nameOfTimerFormat = event.getName();
+        this.questionLength = event.getQuestionLength();
         Log.d("AlertFormat", "AlertFormat was initialized. speechLen: " + this.speechLen);
     }
 
-    private int totalSecondsElapsed(){
+    private int totalSecondsElapsed() {
         int secondsElapsed = 0;
         String chronoText = timer.getText().toString();
         String array[] = chronoText.split(":");
@@ -73,8 +79,11 @@ public class AlertFormat {
         return secondsElapsed;
     }
 
-    public void doAction()
-    {
+    public String getNameOfTimerFormat() {
+        return this.nameOfTimerFormat;
+    }
+
+    public void doAction() {
         int currentTime = totalSecondsElapsed();
         int currentTextColor = timer.getCurrentTextColor();
 
@@ -86,6 +95,10 @@ public class AlertFormat {
             }
         } else if (currentTextColor == this.neutralColor)
         {
+            if (questionEndWarning != 0 && currentTime > questionEndWarning)
+            {
+                timer.setTextColor(this.questionColor);
+            }
             for (int time : this.warningPoints){
                 if (currentTime + 2 == time)
                 {
@@ -93,12 +106,20 @@ public class AlertFormat {
                     this.mostRecentWarning = time;
                 }
             }
+        } else if (currentTextColor == this.questionColor) {
+            if (currentTime >= questionEndWarning + 10) {
+                timer.setTextColor(this.neutralColor);
+                this.questionEndWarning = 0;
+            } else if (currentTime < questionEndWarning)
+            {
+                timer.setTextColor(this.neutralColor);
+            }
         }
         if (currentTime >= startCountDown && currentTime < speechLen)
         {
                 timer.setTextColor(Color.argb(100, 255, 0, 0));
         } else if (currentTime > speechLen) {
-            timer.setTextColor(Color.RED);
+            timer.setTextColor(this.overTimeColor);
         }
     }
 
@@ -129,12 +150,15 @@ public class AlertFormat {
     }
 
     public void resetChronometer(Button startStopButton) {
-        if (isTiming) {
-
-        } else {
+        if (!isTiming) {
             this.timeWhenPaused = 0;
             this.timer.setBase(SystemClock.elapsedRealtime());
             startStopButton.setText("Start Timer");
         }
+    }
+
+    public void questionStarted() {
+        this.questionEndWarning = totalSecondsElapsed() + questionLength;
+        Log.d("questionStarted", "questionEndWarning = " + this.questionEndWarning);
     }
 }

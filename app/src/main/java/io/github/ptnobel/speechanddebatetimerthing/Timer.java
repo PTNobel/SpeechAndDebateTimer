@@ -20,17 +20,18 @@
 
 package io.github.ptnobel.speechanddebatetimerthing;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class Timer extends Activity {
-
+public class Timer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +41,12 @@ public class Timer extends Activity {
         final Chronometer mainTimer =  (Chronometer) findViewById(R.id.mainTimer);
         final Button startStopButton = (Button) findViewById(R.id.startStopButton);
         final Button resetButton = (Button) findViewById(R.id.resetButton);
+        final Button questionButton = (Button) findViewById(R.id.questionButton);
+        final TextView currentTimeFormatText = (TextView) findViewById(R.id.currentTimeFormatText);
 
         final AlertFormat eventAlertFormat = new AlertFormat(fromUser(), mainTimer);
+
+        currentTimeFormatText.setText(eventAlertFormat.getNameOfTimerFormat());
 
         mainTimer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
@@ -61,14 +66,26 @@ public class Timer extends Activity {
                 eventAlertFormat.resetChronometer(startStopButton);
             }
         });
+
+        questionButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                eventAlertFormat.questionStarted();
+            }
+        });
     }
 
     public EventAlertFormat fromUser() {
-        EventAlertFormat output = new EventAlertFormat();
-
-        // setContentView(R.layout.activity_timer);
-
-        return output;
+        StoreEventFormats eventFormats = new StoreEventFormats(this);
+        Intent intent = getIntent();
+        String event;
+        if (intent.hasExtra(ListOfEventsActivity.EXTRA_TIME_NAME)) {
+            event = intent.getStringExtra(ListOfEventsActivity.EXTRA_TIME_NAME);
+        } else {
+            Intent newIntent = new Intent(this, ListOfEventsActivity.class);
+            startActivity(newIntent);
+            event = intent.getStringExtra(ListOfEventsActivity.EXTRA_TIME_NAME);
+        }
+        return eventFormats.getEventAlertFormat(event);
     }
 
     @Override
@@ -93,4 +110,8 @@ public class Timer extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void changeSpeechFormat(View view) {
+        Intent intent = new Intent(this, ListOfEventsActivity.class);
+        startActivity(intent);
+    }
 }

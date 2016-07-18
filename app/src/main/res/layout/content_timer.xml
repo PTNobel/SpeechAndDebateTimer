@@ -39,6 +39,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp" />
 
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Question"
+        android:id="@+id/questionButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +57,7 @@
         android:id="@+id/startStopButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="150dp" />
+        android:layout_marginBottom="200dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -55,7 +66,7 @@
         android:id="@+id/resetButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp" />
+        android:layout_marginBottom="150dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -64,5 +75,16 @@
         android:id="@+id/setTimeFormat"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginBottom="0dp"
+        android:onClick="changeSpeechFormat" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Time Format"
+        android:id="@+id/currentTimeFormatText"
+        android:textColor="#808080"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp" />
 </RelativeLayout>

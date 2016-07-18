@@ -28,6 +28,7 @@ public class EventAlertFormat {
     int speechLen = 180;
     int lenCountDown = 10;
     int[] warningPoints = {60, 120, 150};
+    int questionLength = 8;
     String name = "Congress";
 
     public String getName() {
@@ -46,6 +47,10 @@ public class EventAlertFormat {
         return this.warningPoints;
     }
 
+    public int getQuestionLength() {
+        return this.questionLength;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -60,5 +65,9 @@ public class EventAlertFormat {
 
     public void setWarningPoints(int[] warningPoints) {
         this.warningPoints = warningPoints;
+    }
+
+    public void setQuestionLength(int questionLength) {
+        this.questionLength = questionLength;
     }
 }
